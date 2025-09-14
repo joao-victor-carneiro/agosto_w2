@@ -4,7 +4,14 @@ import pandas as pd
 df_relatorio = pd.read_excel('agosto_w2.xlsx')
 
 st.set_page_config(layout="wide")
-st.title("📊 Dashboard de Relatório Financeiro - Agosto")
+
+# Sidebar
+with st.sidebar:
+    st.image("logo_w2.png", width=180)
+    # Largura ajustada para o sidebar
+    st.logo("elemento.png", size="large", icon_image="logo_simp.png")
+    st.title("📊 Dashboard")  # Título pode ir aqui também
+    st.markdown("Resultados do Mês de Agosto")
 
 # --- Cálculo das Métricas Totais ---
 # Mapeando suas colunas para as colunas do resultado da análise do arquivo
@@ -52,14 +59,14 @@ with col6:
 st.markdown("---")
 
 # --- Exibição da Tabela Detalhada por Empresa ---
-st.header("Detalhes por Empresa")
-st.dataframe(df_relatorio.style.format({
-    "Valor Total das Notas": format_currency,
-    "Valor Total do Frete Empresa": format_currency,
-    "Receita": format_currency,
-    "Frete dos Barqueiros": format_currency,
-    "Lucro": format_currency
-}), use_container_width=True)
+# st.header("Detalhes por Empresa")
+# st.dataframe(df_relatorio.style.format({
+#    "Valor Total das Notas": format_currency,
+#    "Valor Total do Frete Empresa": format_currency,
+#    "Receita": format_currency,
+#    "Frete dos Barqueiros": format_currency,
+#    "Lucro": format_currency
+# }), use_container_width=True)
 
 # Soma do Frete W2 por Empresa e Lucro por Empresa ---
 st.header("Análise Detalhada por Empresa")
@@ -89,3 +96,37 @@ st.bar_chart(df_analise_por_empresa["Frete W2 por Empresa"])
 st.subheader("Gráfico de Lucro por Empresa")
 st.bar_chart(df_analise_por_empresa["Lucro por Empresa"])
 
+st.markdown("---")
+
+# Top5 Cidades
+st.header("Top 5 Cidades por Indicador")
+
+# Frete W2
+top5_frete_w2 = df_relatorio.groupby(
+    'Cidade')['Frete W2'].sum().nlargest(5).reset_index()
+top5_frete_w2.columns = ['Cidade', 'Total Frete W2']
+
+st.subheader("Top 5 Maiores Fretes W2")
+st.dataframe(top5_frete_w2.style.format({
+    "Total Frete W2": format_currency
+}), use_container_width=True)
+
+# Frete Barqueiros
+top5_frete_barqueiros = df_relatorio.groupby(
+    'Cidade')['Frete Barqueiros'].sum().nlargest(5).reset_index()
+top5_frete_barqueiros.columns = ['Cidade', 'Total Frete Barqueiros']
+
+st.subheader("Top 5 Maiores Fretes para Barqueiros")
+st.dataframe(top5_frete_barqueiros.style.format({
+    "Total Frete Barqueiros": format_currency
+}), use_container_width=True)
+
+# Lucro
+top5_lucros = df_relatorio.groupby(
+    'Cidade')['lucro'].sum().nlargest(5).reset_index()
+top5_lucros.columns = ['Cidade', 'Lucro']
+
+st.subheader("Top 5 Cidades com os Maiores Lucros")
+st.dataframe(top5_lucros.style.format({
+    "Lucro": format_currency
+}), use_container_width=True)
