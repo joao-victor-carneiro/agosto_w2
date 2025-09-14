@@ -1,7 +1,5 @@
 import streamlit as st
 import pandas as pd
-import plotly.express as px
-import numpy as np
 
 df_relatorio = pd.read_excel('agosto_w2.xlsx')
 
@@ -90,3 +88,4 @@ st.bar_chart(df_analise_por_empresa["Frete W2 por Empresa"])
 
 st.subheader("Gráfico de Lucro por Empresa")
 st.bar_chart(df_analise_por_empresa["Lucro por Empresa"])
+
